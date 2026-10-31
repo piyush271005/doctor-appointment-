@@ -32,6 +32,11 @@ const appointmentSchema = new mongoose.Schema({
     }
 },{timestamps:true})
 
+// Unique compound index — prevents double-booking at the DB level.
+// If two concurrent requests both pass the availability check, MongoDB will
+// reject the second .save() with a duplicate key error (code 11000).
+appointmentSchema.index({ doctorId: 1, date: 1, time: 1 }, { unique: true });
+
 const appointmentModel = mongoose.model("appointments",appointmentSchema)
 
 

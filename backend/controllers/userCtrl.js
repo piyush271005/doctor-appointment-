@@ -382,6 +382,14 @@ const bookAppointmentController = async (req, res) => {
 
     console.log(error);
 
+    // MongoDB duplicate key error — another booking just claimed this slot
+    if (error.code === 11000) {
+      return res.status(200).send({
+        success: false,
+        message: "This slot was just booked by someone else. Please choose another time.",
+      });
+    }
+
     res.status(500).send({
       success: false,
       message: "Error while booking appointment",
